@@ -1,0 +1,33 @@
+
+  "1756-IA16I": {
+    id: "1756-IA16I",
+    name: "1756-IA16I",
+    manufacturer: "Allen-Bradley",
+    system: "ControlLogix",
+    discontinuedYear: 2020,
+    criticality: "CRITICAL",
+    replacementCost: "$1,800 - $6,500",
+    downtimeCostPerHour: "$35,000",
+    commonFailures: [
+      "ASIC Overheating",
+      "Backplane Data Corruption",
+      "Firmware Signature Mismatch",
+      "Memory Retention Failure"
+    ],
+    specs: [
+      {
+        label: "Registry Date",
+        value: "2026-02-14",
+        relatedParts: ["1756-OA16","1756-IR6I","1756-IF16","1756-IB32","1756-OB8EI"]
+      },
+      {
+        label: "Risk Score",
+        value: "9.8 (Critical)",
+      },
+      {
+        label: "Series",
+        value: "ControlLogix",
+      }
+    ],
+    relatedParts: ["1756-OA16","1756-IR6I","1756-IF16","1756-IB32","1756-OB8EI"],
+  },

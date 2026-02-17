@@ -1,76 +1,69 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ShieldAlert, Info } from "lucide-react";
 import { PartAuditData } from "@/lib/parts";
 
 export default function AuditHeader({ data }: { data: PartAuditData }) {
-  return (
-    <div className="w-full flex flex-col gap-6 mb-12 relative">
-      {/* Decorative Scan Line */}
-      <motion.div 
-        initial={{ top: -20, opacity: 0 }}
-        animate={{ top: "100%", opacity: [0, 1, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-        className="absolute left-0 right-0 h-[2px] bg-accent/20 z-0 pointer-events-none"
-      />
+  const [caseId, setCaseId] = useState<string>("");
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-border pb-6 overflow-hidden">
-        <div className="flex flex-col gap-1">
-          <motion.div 
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            className="flex items-center gap-2 text-accent mb-2"
-          >
-            <ShieldAlert className="w-5 h-5" />
-            <span className="font-mono text-xs uppercase tracking-[0.3em]">System Audit in Progress</span>
-          </motion.div>
-          <motion.h1 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="font-display text-5xl sm:text-7xl uppercase tracking-tighter"
-          >
+  useEffect(() => {
+    setCaseId(Math.random().toString(16).slice(2, 10).toUpperCase());
+  }, []);
+
+  return (
+    <div className="w-full flex flex-col gap-8 mb-16 relative">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b-2 border-border pb-8">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted mb-2">
+            <span className="flex items-center gap-1.5 px-2 py-0.5 bg-accent/10 text-accent border border-accent/20 rounded-sm">
+                <ShieldAlert className="w-3 h-3" />
+                Protocol Verified
+            </span>
+            <span>Audit Report</span>
+            <span className="text-accent">●</span>
+            <span>Case ID: {caseId || "--------"}</span>
+          </div>
+          
+          <h1 className="font-display text-5xl sm:text-7xl font-black uppercase tracking-tighter leading-none mb-1">
             {data.id}
-          </motion.h1>
-          <motion.p 
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="font-mono text-muted text-sm uppercase"
-          >
-            {data.name} // {data.manufacturer}
-          </motion.p>
+          </h1>
+          
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-sm font-bold uppercase py-1 px-3 bg-panel border border-border">
+              {data.criticality} RISK
+            </span>
+            <p className="font-display font-semibold text-lg uppercase text-muted">
+              {data.name} // {data.manufacturer}
+            </p>
+          </div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col items-end gap-1 bg-accent/5 p-4 border border-accent/20 backdrop-blur-sm"
-        >
-          <span className="font-mono text-[10px] uppercase text-accent/60">Audit Risk Hash</span>
-          <span className="font-mono text-xs text-accent">0x{Math.random().toString(16).slice(2, 10).toUpperCase()}</span>
-        </motion.div>
+        <div className="hidden lg:flex flex-col items-end gap-2 p-6 border-2 border-accent/20 bg-accent/5">
+          <span className="font-mono text-[9px] uppercase tracking-widest text-accent/60">Risk Assessment Score</span>
+          <span className="font-display text-6xl font-black leading-none text-accent">9.8</span>
+          <div className="flex flex-col items-end">
+            <span className="font-mono text-[8px] uppercase text-accent/40 leading-tight">Critical Infrastructure Vulnerability</span>
+            <span className="font-mono text-[7px] uppercase text-accent inline-block border border-accent/30 px-1 mt-1 font-bold">CERTIFIED AGENCY AUDIT</span>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
         {[
-          { label: "Downtime Risk", val: data.criticality, color: "text-accent" },
-          { label: "Est. Impact", val: `${data.downtimeCostPerHour}/hr`, color: "text-white" },
-          { label: "Status", val: "OBSOLETE", color: "text-red-500" },
-          { label: "OEM Support", val: "ENDED", color: "text-muted" },
+          { label: "Downtime Impact", val: `${data.downtimeCostPerHour}/hr`, color: "text-white" },
+          { label: "Market Status", val: "OBSOLETE", color: "text-red-500" },
+          { label: "Replacement Est.", val: data.replacementCost, color: "text-white" },
+          { label: "System Origin", val: data.system, color: "text-muted" },
         ].map((stat, i) => (
-          <motion.div 
+          <div 
             key={i}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 + (i * 0.1) }}
-            className="flex flex-col border-l border-border pl-4 py-2"
+            className="flex flex-col bg-panel/20 p-6 border border-border"
           >
-            <span className="font-mono text-[9px] uppercase tracking-widest text-muted">{stat.label}</span>
-            <span className={`font-mono text-sm uppercase ${stat.color}`}>{stat.val}</span>
-          </motion.div>
+            <span className="font-mono text-[9px] uppercase tracking-widest text-muted mb-2">{stat.label}</span>
+            <span className={`font-mono text-sm font-bold uppercase tracking-tight ${stat.color}`}>{stat.val}</span>
+          </div>
         ))}
       </div>
     </div>
